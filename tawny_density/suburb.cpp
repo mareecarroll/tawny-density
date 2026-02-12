@@ -11,32 +11,20 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
 #include "suburb.hpp"
 
-// 2. C system headers
-#include <cstring>   // cpplint thinks this is C system
-#include <cassert>
 #include <cstddef>
 
-// 3. C++ system headers
 #include <algorithm>
-#include <chrono>
-#include <cmath>
 #include <fstream>
-#include <functional>
-#include <iostream>
 #include <map>
 #include <optional>
-#include <set>
-#include <sstream>
+#include <stdexcept>
 #include <string>
-#include <thread>
 #include <unordered_map>
 #include <utility>
 #include <vector>
 
-// 4. Other library headers
 #include <nlohmann/json.hpp>
 
 using std::string;
