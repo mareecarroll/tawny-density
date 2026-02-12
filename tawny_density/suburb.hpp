@@ -23,43 +23,44 @@ using std::vector;
 using json = nlohmann::json;
 
 namespace suburb {
-    // -------------------------------------
-    // structures for holding suburb polygon
-    // -------------------------------------
+// -------------------------------------
+// structures for holding suburb polygon
+// -------------------------------------
 
-    // lat/lon point
-    struct Point { double lon{}, lat{}; };
+// lat/lon point
+struct Point { double lon{}, lat{}; };
 
-    // polygon ring
-    struct Ring {
-        // Closed or open ring of lon/lat points
-        vector<Point> points;
-    };
+// polygon ring
+struct Ring {
+    // Closed or open ring of lon/lat points
+    vector<Point> points;
+};
 
-    // polygon shape
-    struct Polygon {
-        // rings[0] = outer; rings[1..] = holes
-        vector<Ring> rings;
-        // bounding box for fast reject
-        double minLon{}, minLat{}, maxLon{}, maxLat{};
-    };
+// polygon shape
+struct Polygon {
+    // rings[0] = outer; rings[1..] = holes
+    vector<Ring> rings;
+    // bounding box for fast reject
+    double minLon{}, minLat{}, maxLon{}, maxLat{};
+};
 
-    // suburb from geojson, suburb name, polygons, bounding box
-    struct Suburb {
-        string name;
-        vector<Polygon> polys;
-        // bounding box
-        double minLon{}, minLat{}, maxLon{}, maxLat{};
-    };
+// suburb from geojson, suburb name, polygons, bounding box
+struct Suburb {
+    string name;
+    vector<Polygon> polys;
+    // bounding box
+    double minLon{}, minLat{}, maxLon{}, maxLat{};
+};
 
-    void ringBounds(const Ring& ring, double* minLon, double* minLat, double* maxLon, double* maxLat);
-    bool pointInRing(const Ring& ring, const Point& q);
-    bool pointInPolygon(const Polygon& poly, const Point& point);
-    bool pointInSuburb(const Suburb& suburb, const Point& point);
-    string detectNameField(const json& props);
-    vector<Suburb> loadSuburbsGeoJSON(
-        const string& path, double* outMinLon, double* outMinLat,
-        double* outMaxLon, double* outMaxLat);
-}
+void ringBounds(const Ring& ring, double* minLon, double* minLat, double* maxLon, double* maxLat);
+bool pointInRing(const Ring& ring, const Point& q);
+bool pointInPolygon(const Polygon& poly, const Point& point);
+bool pointInSuburb(const Suburb& suburb, const Point& point);
+string detectNameField(const json& props);
+vector<Suburb> loadSuburbsGeoJSON(
+    const string& path, double* outMinLon, double* outMinLat,
+    double* outMaxLon, double* outMaxLat);
+
+} // namespace suburb
 
 #endif  // TAWNY_DENSITY_SUBURB_H_

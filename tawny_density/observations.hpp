@@ -23,27 +23,27 @@ using std::string;
 
 namespace observations {
 
-    const char USER_AGENT[] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) "
-        "Chrome/58.0.3029.110 Safari/537.36";
+const char USER_AGENT[] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+    "AppleWebKit/537.36 (KHTML, like Gecko) "
+    "Chrome/58.0.3029.110 Safari/537.36";
 
-    const char URL_BASE[] = "https://api.inaturalist.org/v1/observations";
+const char URL_BASE[] = "https://api.inaturalist.org/v1/observations";
 
-    const int PER_PAGE = 200;  // v1: max 200 per page
+const int PER_PAGE = 200;  // v1: max 200 per page
 
-    // Structure for observation lat/lon
-    // as per iNaturalist observation
-    struct ObsPoint { double lon{}, lat{}; };
+// Structure for observation lat/lon
+// as per iNaturalist observation
+struct ObsPoint { double lon{}, lat{}; };
 
-    static size_t curlWriteToString(void* contents, size_t size, size_t nmemb, void* userData);
-    string urlEncode(const string& url);
-    string httpGet(const string& url);
+static size_t curlWriteToString(void* contents, size_t size, size_t nmemb, void* userData);
+string urlEncode(const string& url);
+string httpGet(const string& url);
 
-    vector<ObsPoint> fetchINatPoints(
-        const std::string& taxonName,
-        const string& d1, const std::string& d2,
-        double swlat, double swlng, double nelat, double nelng);
+vector<ObsPoint> fetchINatPoints(
+    const std::string& taxonName,
+    const string& d1, const std::string& d2,
+    double swlat, double swlng, double nelat, double nelng);
 
-}
+} // namespace observations
 
 #endif  // TAWNY_DENSITY_OBSERVATIONS_H_
