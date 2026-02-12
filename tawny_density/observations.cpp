@@ -94,6 +94,7 @@ string httpGet(IHttpClient& client, const string& url) {
 // Fetches observation points from iNaturalist
 //
 // Args:
+//    client: the HTTP client to use for making the request
 //    taxonName: the taxonomical name of the animal or plant species
 //    d1: must be observed on or after this date
 //    d2: must be observed on or before this ddate
@@ -104,6 +105,7 @@ string httpGet(IHttpClient& client, const string& url) {
 // Returns:
 //    vector of observation points
 vector<ObsPoint> fetchINatPoints(
+    IHttpClient& client,
     const string& taxonName,
     const string& d1, const string& d2,
     double swlat, double swlng, double nelat, double nelng) {
@@ -131,7 +133,6 @@ vector<ObsPoint> fetchINatPoints(
             << "&per_page=" << PER_PAGE
             << "&page=" << page;
 
-        CurlHttpClient client;
         const string body = httpGet(client, url.str());
 
         if (body.size() == 0) throw runtime_error("Couldn't fetch observations");

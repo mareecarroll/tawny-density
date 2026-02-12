@@ -40,6 +40,7 @@ string urlEncode(const string& url);
 string httpGet(IHttpClient& client, const string& url);
 
 vector<ObsPoint> fetchINatPoints(
+    IHttpClient& client,
     const std::string& taxonName,
     const string& d1, const std::string& d2,
     double swlat, double swlng, double nelat, double nelng);

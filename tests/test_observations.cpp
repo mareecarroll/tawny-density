@@ -24,7 +24,7 @@ using utils::IHttpClient;
 
 using observations::urlEncode;
 using observations::httpGet;
-// using observations::fetchINatPoints;
+using observations::fetchINatPoints;
 
 // We wrap curl_easy_escape so we can mock it in tests.
 extern "C" {
@@ -109,4 +109,75 @@ TEST_CASE("httpGet returns empty string on exception") {
     } bad;
 
     CHECK(httpGet(bad, "http://example.com") == "");
+}
+
+// -----------------------------------------------------------------------------
+// Tests for fetchINatPoints
+// -----------------------------------------------------------------------------
+
+TEST_CASE("fetchINatPoints parses a simple iNaturalist response") {
+    FakeHttpClient fake;
+
+    // Minimal valid iNaturalist-style JSON
+    fake.next = {
+        200,
+        R"({
+            "results": [
+                {
+                    "geojson": { "coordinates": [144.9631, -37.8136] },
+                    "observed_on": "2024-01-01"
+                },
+                {
+                    "geojson": { "coordinates": [145.0000, -37.8200] },
+                    "observed_on": "2024-01-02"
+                }
+            ]
+        })"
+    };
+
+    auto points = fetchINatPoints(
+        fake,
+        "Aves",
+        "2024-01-01", "2024-01-31",
+        -38.0, 144.0,
+        -37.0, 146.0
+    );
+
+    CHECK(points.size() == 2);
+
+    CHECK(points[0].lon == doctest::Approx(144.9631));
+    CHECK(points[0].lat == doctest::Approx(-37.8136));
+
+    CHECK(points[1].lon == doctest::Approx(145.0000));
+    CHECK(points[1].lat == doctest::Approx(-37.8200));
+}
+
+TEST_CASE("fetchINatPoints returns empty vector on HTTP error") {
+    FakeHttpClient fake;
+    fake.next = {500, "Server error"};
+
+    auto points = fetchINatPoints(
+        fake,
+        "Aves",
+        "2024-01-01", "2024-01-31",
+        -38.0, 144.0,
+        -37.0, 146.0
+    );
+
+    CHECK(points.empty());
+}
+
+TEST_CASE("fetchINatPoints returns empty vector on malformed JSON") {
+    FakeHttpClient fake;
+    fake.next = {200, "not json at all"};
+
+    auto points = fetchINatPoints(
+        fake,
+        "Aves",
+        "2024-01-01", "2024-01-31",
+        -38.0, 144.0,
+        -37.0, 146.0
+    );
+
+    CHECK(points.empty());
 }

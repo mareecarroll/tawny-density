@@ -41,9 +41,15 @@ pre-commit install
 mkdir -p build && cd build
 cmake -DENABLE_COVERAGE=ON ..
 cmake --build .
-ctest
+ctest # minimal CI style
 gcovr -r .. --html-details coverage.html
 gcovr -r .. # terminal
+```
+
+Alternatively to run doctest directly, full, verbose and human-friendly.
+
+```script
+./tawny_density_tests 
 ```
 
 ## Release Build with CMake

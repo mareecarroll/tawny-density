@@ -30,6 +30,7 @@
 #include <vector>                 // for vector
 #include "observations.hpp"       // for ObsPoint, fetchINatPoints
 #include "suburb.hpp"             // for loadSuburbsGeoJSON, pointInSuburb
+#include "utils.hpp"              // for CurlHttpClient, HttpResponse, IHttpClient
 
 using std::string;
 using std::vector;
@@ -46,6 +47,7 @@ using json = nlohmann::json;
 
 using suburb::loadSuburbsGeoJSON;
 using suburb::Point;
+using utils::CurlHttpClient;
 using observations::fetchINatPoints;
 
 // input args for main entry point
@@ -108,7 +110,8 @@ int main(int argc, char** argv) {
             << "] for " << TAWNY_TAXON << " from " << SPRING_2025_START_DATE
             << " to " << SPRING_2025_END_DATE << " ...\n";
 
-        auto obs = fetchINatPoints(TAWNY_TAXON, SPRING_2025_START_DATE, SPRING_2025_END_DATE,
+        CurlHttpClient client;
+        auto obs = fetchINatPoints(client, TAWNY_TAXON, SPRING_2025_START_DATE, SPRING_2025_END_DATE,
             swlat, swlng, nelat, nelng);
         cerr << "Observations fetched (with coordinates): " << obs.size() << "\n";
 
