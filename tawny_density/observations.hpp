@@ -36,7 +36,6 @@ const int PER_PAGE = 200;  // v1: max 200 per page
 // as per iNaturalist observation
 struct ObsPoint { double lon{}, lat{}; };
 
-static size_t curlWriteToString(void* contents, size_t size, size_t nmemb, void* userData);
 string urlEncode(const string& url);
 string httpGet(IHttpClient& client, const string& url);
 

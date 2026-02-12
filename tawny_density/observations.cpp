@@ -54,20 +54,6 @@ using utils::IHttpClient;
 using utils::CurlHttpClient;
 
 namespace observations {
-// Callback function for handling response from inaturalist API call
-//
-// Args:
-//    contents: pointer to response contents
-//    size: size of each data element
-//    nmemb: number of data elements
-//    userData: a pointer to user-defined data, passed via CURLOPT_WRITEDATA option
-// Returns:
-//   total size of the data (size of each data element * number of data elements)
-static size_t curlWriteToString(void* contents, size_t size, size_t nmemb, void* userData) {
-    const size_t total = size * nmemb;
-    static_cast<string*>(userData)->append(static_cast<char*>(contents), total);
-    return total;
-}
 
 // Returns encoded url for inaturalist API calls
 //

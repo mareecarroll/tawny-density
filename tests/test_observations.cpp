@@ -23,7 +23,6 @@ using utils::HttpResponse;
 using utils::IHttpClient;
 
 using observations::urlEncode;
-using observations::curlWriteToString;
 using observations::httpGet;
 // using observations::fetchINatPoints;
 
@@ -85,50 +84,7 @@ TEST_CASE("urlEncode returns original string when curl_easy_escape fails") {
 }
 
 // -----------------------------------------------------------------------------
-// Tests for curlWriteToString
-// -----------------------------------------------------------------------------
-
-TEST_CASE("curlWriteToString appends data correctly") {
-    string buffer;
-
-    const char* data = "hello world";
-    size_t size = 1;
-    size_t nmemb = 11; // strlen("hello world")
-
-    size_t written = curlWriteToString((void*)data, size, nmemb, &buffer);
-
-    CHECK(written == 11);
-    CHECK(buffer == "hello world");
-}
-
-TEST_CASE("curlWriteToString handles multi-byte chunks") {
-    string buffer;
-
-    const char* data = "abc123";
-    size_t size = 2;     // pretend each element is 2 bytes
-    size_t nmemb = 3;    // 3 elements → 6 bytes total
-
-    size_t written = curlWriteToString((void*)data, size, nmemb, &buffer);
-
-    CHECK(written == 6);
-    CHECK(buffer == "abc123");
-}
-
-TEST_CASE("curlWriteToString appends to existing content") {
-    string buffer = "prefix:";
-
-    const char* data = "XYZ";
-    size_t size = 1;
-    size_t nmemb = 3;
-
-    size_t written = curlWriteToString((void*)data, size, nmemb, &buffer);
-
-    CHECK(written == 3);
-    CHECK(buffer == "prefix:XYZ");
-}
-
-// -----------------------------------------------------------------------------
-// Tests for curlWriteToString
+// Tests for httpGet
 // -----------------------------------------------------------------------------
 
 TEST_CASE("httpGet returns body on success") {
