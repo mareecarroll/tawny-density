@@ -12,20 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 #include "suburb.hpp"
-
-#include <cstddef>
-
-#include <algorithm>
-#include <fstream>
-#include <map>
-#include <optional>
-#include <stdexcept>
-#include <string>
-#include <unordered_map>
-#include <utility>
-#include <vector>
-
-#include <nlohmann/json.hpp>
+#include <algorithm>                                // for max, min, find_if
+#include <cstddef>                                  // for size_t
+#include <fstream>                                  // for basic_ifstream
+#include <map>                                      // for operator!=, opera...
+#include <nlohmann/detail/iterators/iter_impl.hpp>  // for iter_impl
+#include <nlohmann/json.hpp>                        // for basic_json, opera...
+#include <optional>                                 // for optional
+#include <stdexcept>                                // for runtime_error
+#include <string>                                   // for basic_string, string
+#include <unordered_map>                            // for unordered_map
+#include <utility>                                  // for move
+#include <vector>                                   // for vector
 
 using std::string;
 using std::vector;
