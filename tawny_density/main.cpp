@@ -15,9 +15,9 @@
 // main.cpp
 
 // 1. Project headers
-#include "main.h"
-#include "observations.h"
-#include "suburb.h"
+#include "main.hpp"
+#include "observations.hpp"
+#include "suburb.hpp"
 
 // 2. C system headers
 #include <cstring>   // cpplint thinks this is C system

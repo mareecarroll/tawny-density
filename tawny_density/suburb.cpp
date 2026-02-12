@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "suburb.h"
+#include "suburb.hpp"
 
 // 2. C system headers
 #include <cstring>   // cpplint thinks this is C system

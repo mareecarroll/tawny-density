@@ -13,8 +13,8 @@
 // limitations under the License.
 
 // 1. Project headers
-#include "observations.h"
-#include "suburb.h"
+#include "observations.hpp"
+#include "suburb.hpp"
 
 // 2. C system headers
 #include <cstring>   // cpplint thinks this is C system
