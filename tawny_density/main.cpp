@@ -271,7 +271,7 @@ bool pointInSuburb(const Suburb& suburb, const Point& point) {
         suburb.polys.begin(),
         suburb.polys.end(),
         [&](const auto& poly) {
-            return pointInPolygon(&poly, &point);
+            return pointInPolygon(poly, point);
         });
 }
 
@@ -306,7 +306,7 @@ string detectNameField(const json& props) {
         props.begin(),
         props.end(),
         [](const auto& kv) {
-            return kv.value().is_string();
+            return kv.is_string();
         });
     if (it2 != props.end()) return it2.key();
 
