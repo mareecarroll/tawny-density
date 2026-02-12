@@ -14,8 +14,9 @@
 #ifndef TAWNY_DENSITY_OBSERVATIONS_H_
 #define TAWNY_DENSITY_OBSERVATIONS_H_
 
-#include <vector>
-#include <string>
+#include <stddef.h>  // for size_t
+#include <string>    // for string
+#include <vector>    // for vector
 
 using std::vector;
 using std::string;
