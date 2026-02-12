@@ -12,8 +12,8 @@ Determines the Melbourne suburb with the most Tawny Frogmouth sightings in Sprin
 
 ## API & data notes
 
-- [iNaturalist](inaturalist.org) v1 observations endpoint supports filtering by date range (d1, d2), by taxon name (taxon_name), and by bounding box (swlat, swlng, nelat, nelng). Page size up to 200 per request is supported; pagination can be required for larger result sets. 
-- iNaturalist’s v1 endpoint limits to 200 results per page and commonly enforces a practical cap of ~10,000 results for a single parameter set; for very large queries you’d page with id_above/id_below. For this Melbourne‑spring‑2025 slice that cap should not be reached, but the program still paginates defensively. 
+- [iNaturalist](inaturalist.org) v1 observations endpoint supports filtering by date range (d1, d2), by taxon name (taxon_name), and by bounding box (swlat, swlng, nelat, nelng). Page size up to 200 per request is supported; pagination can be required for larger result sets.
+- iNaturalist’s v1 endpoint limits to 200 results per page and commonly enforces a practical cap of ~10,000 results for a single parameter set; for very large queries you’d page with id_above/id_below. For this Melbourne‑spring‑2025 slice that cap should not be reached, but the program still paginates defensively.
 - The “VIC Suburb/Locality Boundaries – Geoscape Administrative Boundaries” dataset provides Victoria-wide localities under CC BY 4.0, available as GeoJSON/WFS. You can either pre‑filter it to Greater Melbourne or pass a Melbourne‑only GeoJSON. See [data.gov.au]
 
 ## Requirements
@@ -27,6 +27,12 @@ cd json
 mkdir build && cd build
 cmake -DJSON_BuildTests=OFF ..
 sudo make install
+```
+
+## Install pre-commit hooks
+
+```shell
+pre-commit install
 ```
 
 ## Build with CMake

@@ -1,0 +1,28 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+    - id: trailing-whitespace
+    - id: end-of-file-fixer
+    - id: check-json
+
+-   repo: https://github.com/cpplint/cpplint
+    rev: 2.0.2
+    hooks:
+      - id: cpplint
+        files: "\\.(c|cc|cpp|cxx|h|hpp)$"
+        args: ["--linelength=120","--filter=-build/c++11,-build/include_order,-build/include_subdir"]
+
+-   repo: https://github.com/pocc/pre-commit-hooks
+    rev: v1.3.5
+    hooks:
+      - id: cppcheck
+        args:
+          - "--enable=all"
+          - "--inconclusive"
+          - "--std=c++20"
+          - "--quiet"
+          - "--suppressions-list=.cppcheck-suppressions"
+        files: "\\.(c|cc|cpp|cxx|h|hpp)$"
