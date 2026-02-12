@@ -41,3 +41,4 @@
 *.dwo
 
 tawny_density/build/
+tawny_density/counts.csv

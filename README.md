@@ -1,11 +1,11 @@
 # Tawny Density
 
-Determines the Melbourne suburb with the most Tawny Frogmouth sightings in Spring 2025.
+Determines the Victorian suburb with the most Tawny Frogmouth sightings in Spring 2025.
 
 ## Process
 
 1. Calls the iNaturalist v1 Observations API for Tawny Frogmouth (Podargus strigoides) observations between 2025‑09‑01 and 2025‑11‑30 (Australian spring)
-2. Restricts results to the bounding box of the suburbs provided in Melbourne suburbs GeoJSON file
+2. Restricts results to the bounding box of the suburbs provided in Victorian suburbs GeoJSON file
 3. Assigns each georeferenced observation to a suburb by point‑in‑polygon (Polygon & MultiPolygon, with hole‑aware ray casting)
 4. Reports the suburb with the most sightings (and writes a full CSV of suburb Tawny counts).
 
@@ -46,7 +46,16 @@ cmake --build . --config Release
 ## Run
 
 ```shell
-./tawny_top_suburb --geojson melbourne_suburbs.geojson --out counts.csv
+./build/tawny_density --geojson suburb-10-vic.geojson --out counts.csv
+```
+
+```shell
+Suburbs loaded: 2973
+Querying iNaturalist within bbox [-39.1366,140.962] to [-33.9815,149.976] for Podargus strigoides from 2025-09-01 to 2025-11-30 ...
+Observations fetched (with coordinates): 1033
+Assigned observations: 949
+Top suburb (Spring 2025): BLACKBURN — 289 sightings
+Wrote counts CSV to counts.csv
 ```
 
 ## Implementation details & assumptions
