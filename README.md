@@ -35,7 +35,18 @@ sudo make install
 pre-commit install
 ```
 
-## Build with CMake
+## Tests and coverage
+
+```shell
+mkdir -p build && cd build
+cmake -DENABLE_COVERAGE=ON ..
+cmake --build .
+ctest
+gcovr -r .. --html-details coverage.html
+gcovr -r .. # terminal
+```
+
+## Release Build with CMake
 
 ```shell
 mkdir -p build && cd build

@@ -43,4 +43,5 @@
 build/
 tawny_density/counts.csv
 .vscode/
-
+coverage.html
+Testing/
