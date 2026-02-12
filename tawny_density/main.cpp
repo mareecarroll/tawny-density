@@ -218,39 +218,39 @@ void ringBounds(const Ring& ring, double* minLon, double* minLat, double* maxLon
     }
 }
 
-// // Ray casting for point in ring (excluding boundary ambiguity -> treat boundary as inside)
-// bool pointInRing(const Ring& ring, const Point& q) {
-//     bool inside = false;
-//     const auto& points = ring.points;
-//     const size_t n = points.size();
-//     if (n < 3) return false;
-//     for (size_t i = 0, j = n - 1; i < n; j = i++) {
-//         const Point& a = points[j];
-//         const Point& b = points[i];
-//         const bool intersect = ((a.lat > q.lat) != (b.lat > q.lat)) &&
-//             (q.lon < (b.lon - a.lon) * (q.lat - a.lat) / (b.lat - a.lat + 1e-20) + a.lon);
-//         if (intersect) inside = !inside;
-//     }
-//     return inside;
-// }
+// Ray casting for point in ring (excluding boundary ambiguity -> treat boundary as inside)
+bool pointInRing(const Ring& ring, const Point& q) {
+    bool inside = false;
+    const auto& points = ring.points;
+    const size_t n = points.size();
+    if (n < 3) return false;
+    for (size_t i = 0, j = n - 1; i < n; j = i++) {
+        const Point& a = points[j];
+        const Point& b = points[i];
+        const bool intersect = ((a.lat > q.lat) != (b.lat > q.lat)) &&
+            (q.lon < (b.lon - a.lon) * (q.lat - a.lat) / (b.lat - a.lat + 1e-20) + a.lon);
+        if (intersect) inside = !inside;
+    }
+    return inside;
+}
 
-// // Returns true if point is inside polygon
-// bool pointInPolygon(const Polygon& poly, const Point& point) {
-//     // Fast bounding box reject
-//     if (point.lon < poly.minLon ||
-//         point.lon > poly.maxLon ||
-//         point.lat < poly.minLat ||
-//         point.lat > poly.maxLat)
-//         return false;
-//     if (poly.rings.empty()) return false;
-//     // Inside outer?
-//     if (!pointInRing(poly.rings.front(), point)) return false;
-//     // Not inside any hole
-//     for (size_t i = 1; i < poly.rings.size(); ++i) {
-//         if (pointInRing(poly.rings[i], point)) return false;
-//     }
-//     return true;
-// }
+// Returns true if point is inside polygon
+bool pointInPolygon(const Polygon& poly, const Point& point) {
+    // Fast bounding box reject
+    if (point.lon < poly.minLon ||
+        point.lon > poly.maxLon ||
+        point.lat < poly.minLat ||
+        point.lat > poly.maxLat)
+        return false;
+    if (poly.rings.empty()) return false;
+    // Inside outer?
+    if (!pointInRing(poly.rings.front(), point)) return false;
+    // Not inside any hole
+    for (size_t i = 1; i < poly.rings.size(); ++i) {
+        if (pointInRing(poly.rings[i], point)) return false;
+    }
+    return true;
+}
 
 // Returns true if point is inside suburb bounding box
 //
@@ -271,7 +271,7 @@ bool pointInSuburb(const Suburb& suburb, const Point& point) {
         suburb.polys.begin(),
         suburb.polys.end(),
         [&](const auto& poly) {
-            return poly.containsPoint(pt);
+            return pointInPolygon(&poly, &point);
         });
 }
 
