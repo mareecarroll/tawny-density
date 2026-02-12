@@ -41,23 +41,13 @@
 
 using std::string;
 using std::vector;
-using std::cout;
-using std::cerr;
 using std::min;
 using std::max;
 using std::move;
-using std::fixed;
-using std::isnan;
-using std::this_thread::sleep_for;
 using std::runtime_error;
 using std::optional;
-using std::ostringstream;
 using std::ifstream;
-using std::ofstream;
 using std::unordered_map;
-using std::exception;
-using std::chrono::steady_clock;
-using std::chrono::milliseconds;
 using json = nlohmann::json;
 
 using suburb::Point;
@@ -102,6 +92,12 @@ namespace suburb {
     }
 
     // Returns true if point is inside polygon
+    //
+    // Args:
+    //     poly: the polygon including bounding box
+    //     point: the point lat/lon to check inside polygon
+    // Returns:
+    //     true if point sits inside polygon
     bool pointInPolygon(const Polygon& poly, const Point& point) {
         // Fast bounding box reject
         if (point.lon < poly.minLon ||
