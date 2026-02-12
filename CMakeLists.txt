@@ -61,7 +61,6 @@ target_link_libraries(tawny_density_tests
         tawny_density_lib
 )
 
-
 add_test(NAME tawny_density_tests COMMAND tawny_density_tests)
 
 # ------------------------------------------------------------------------------
