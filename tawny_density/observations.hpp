@@ -11,8 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#ifndef TAWNY_DENSITY_OBSERVATIONS_H_
-#define TAWNY_DENSITY_OBSERVATIONS_H_
+#ifndef TAWNY_DENSITY_OBSERVATIONS_HPP_
+#define TAWNY_DENSITY_OBSERVATIONS_HPP_
 
 #include <stddef.h>  // for size_t
 #include <string>    // for string
@@ -44,6 +44,6 @@ vector<ObsPoint> fetchINatPoints(
     const string& d1, const std::string& d2,
     double swlat, double swlng, double nelat, double nelng);
 
-} // namespace observations
+}  // namespace observations
 
-#endif  // TAWNY_DENSITY_OBSERVATIONS_H_
+#endif  // TAWNY_DENSITY_OBSERVATIONS_HPP_

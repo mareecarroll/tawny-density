@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef TAWNY_DENSITY_MAIN_H_
-#define TAWNY_DENSITY_MAIN_H_
+#ifndef TAWNY_DENSITY_MAIN_HPP_
+#define TAWNY_DENSITY_MAIN_HPP_
 
 const char SPRING_2025_START_DATE[] = "2025-09-01";
 const char SPRING_2025_END_DATE[] = "2025-11-30";
 const char TAWNY_TAXON[] = "Podargus strigoides";  // Tawny Frogmouth
 
-#endif  // TAWNY_DENSITY_MAIN_H_
+#endif  // TAWNY_DENSITY_MAIN_HPP_

@@ -11,8 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#ifndef TAWNY_DENSITY_SUBURB_H_
-#define TAWNY_DENSITY_SUBURB_H_
+#ifndef TAWNY_DENSITY_SUBURB_HPP_
+#define TAWNY_DENSITY_SUBURB_HPP_
 
 #include <nlohmann/json_fwd.hpp>  // for json
 #include <string>                 // for string, basic_string
@@ -61,6 +61,6 @@ vector<Suburb> loadSuburbsGeoJSON(
     const string& path, double* outMinLon, double* outMinLat,
     double* outMaxLon, double* outMaxLat);
 
-} // namespace suburb
+}  // namespace suburb
 
-#endif  // TAWNY_DENSITY_SUBURB_H_
+#endif  // TAWNY_DENSITY_SUBURB_HPP_

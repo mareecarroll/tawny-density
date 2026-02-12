@@ -160,7 +160,7 @@ vector<ObsPoint> fetchINatPoints(
             << "&page=" << page;
 
         const string body = httpGet(url.str());
-        if(body.size() == 0) throw runtime_error("Couldn't fetch observations");
+        if (body.size() == 0) throw runtime_error("Couldn't fetch observations");
         const auto j = json::parse(body);
 
         if (total_results < 0 && j.contains("total_results")) {
