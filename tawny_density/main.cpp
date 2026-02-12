@@ -14,35 +14,22 @@
 
 // main.cpp
 
-// 1. Project headers
 #include "main.hpp"
-#include "observations.hpp"
-#include "suburb.hpp"
-
-// 2. C system headers
-#include <cstring>   // cpplint thinks this is C system
-#include <cassert>
-#include <cstddef>
-
-// 3. C++ system headers
-#include <algorithm>
-#include <cmath>
-#include <fstream>
-#include <functional>
-#include <iostream>
-#include <map>
-#include <optional>
-#include <set>
-#include <sstream>
-#include <string>
-#include <thread>
-#include <unordered_map>
-#include <utility>
-#include <vector>
-
-// 4. Other library headers
-#include <curl/curl.h>
-#include <nlohmann/json.hpp>
+#include <algorithm>              // for max, min
+#include <cstddef>                // for size_t
+#include <cstdint>                // for uint64_t
+#include <exception>              // for exception
+#include <fstream>                // for basic_ostream, operator<<, basic_of...
+#include <iostream>               // for cerr, cout
+#include <nlohmann/json_fwd.hpp>  // for json
+#include <optional>               // for optional
+#include <stdexcept>              // for runtime_error
+#include <string>                 // for basic_string, char_traits, allocator
+#include <unordered_map>          // for unordered_map
+#include <utility>                // for pair
+#include <vector>                 // for vector
+#include "observations.hpp"       // for ObsPoint, fetchINatPoints
+#include "suburb.hpp"             // for loadSuburbsGeoJSON, pointInSuburb
 
 using std::string;
 using std::vector;
