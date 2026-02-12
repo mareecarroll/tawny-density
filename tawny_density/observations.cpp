@@ -51,6 +51,7 @@ using observations::PER_PAGE;
 
 using utils::HttpResponse;
 using utils::IHttpClient;
+using utils::CurlHttpClient;
 
 namespace observations {
 // Callback function for handling response from inaturalist API call
@@ -144,7 +145,9 @@ vector<ObsPoint> fetchINatPoints(
             << "&per_page=" << PER_PAGE
             << "&page=" << page;
 
-        const string body = httpGet(url.str());
+        CurlHttpClient client;
+        const string body = httpGet(client, url.str());
+
         if (body.size() == 0) throw runtime_error("Couldn't fetch observations");
         const auto j = json::parse(body);
 

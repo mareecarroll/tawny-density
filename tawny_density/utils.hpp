@@ -17,6 +17,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <utility>
+#include <cstdint>
 
 using std::string;
 using std::runtime_error;
