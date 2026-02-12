@@ -12,35 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// 1. Project headers
 #include "observations.hpp"
-#include "suburb.hpp"
-
-// 2. C system headers
-#include <cstring>   // cpplint thinks this is C system
-#include <cassert>
-#include <cstddef>
-
-// 3. C++ system headers
-#include <algorithm>
-#include <chrono>
-#include <cmath>
-#include <fstream>
-#include <functional>
-#include <iostream>
-#include <map>
-#include <optional>
-#include <set>
-#include <sstream>
-#include <string>
-#include <thread>
-#include <unordered_map>
-#include <utility>
-#include <vector>
-
-// 4. Other library headers
-#include <curl/curl.h>
-#include <nlohmann/json.hpp>
+#include <curl/curl.h>            // for curl_easy_setopt, curl_easy_cleanup
+#include <chrono>                 // for milliseconds
+#include <cmath>                  // for isnan, NAN
+#include <exception>              // for exception
+#include <iostream>               // for basic_ostream, operator<<, basic_os...
+#include <map>                    // for operator!=, operator==
+#include <nlohmann/json.hpp>      // for basic_json
+#include <nlohmann/json_fwd.hpp>  // for json
+#include <optional>               // for optional
+#include <sstream>                // for basic_ostringstream
+#include <stdexcept>              // for runtime_error
+#include <string>                 // for char_traits, basic_string, allocator
+#include <thread>                 // for sleep_for
+#include <unordered_map>          // for unordered_map
+#include <vector>                 // for vector
 
 using std::string;
 using std::vector;
