@@ -31,7 +31,6 @@ using std::string;
 using std::vector;
 using std::min;
 using std::max;
-using std::move;
 using std::runtime_error;
 using std::optional;
 using std::ifstream;
@@ -225,7 +224,7 @@ namespace suburb {
                             ring.points.front().lat != ring.points.back().lat)) {
                         ring.points.push_back(ring.points.front());
                     }
-                    poly.rings.push_back(move(ring));
+                    poly.rings.push_back(std::move(ring));
                 }
                 // compute poly axis-aligned bounding box
                 double minLon, minLat, maxLon, maxLat;
@@ -246,7 +245,7 @@ namespace suburb {
                 suburb.maxLon = max(suburb.maxLon, maxLon);
                 suburb.maxLat = max(suburb.maxLat, maxLat);
 
-                suburb.polys.push_back(move(poly));
+                suburb.polys.push_back(std::move(poly));
             };
 
             if (type == "Polygon") {
@@ -264,7 +263,7 @@ namespace suburb {
             *outMaxLon = max(*outMaxLon, suburb.maxLon);
             *outMaxLat = max(*outMaxLat, suburb.maxLat);
 
-            suburbs.push_back(move(suburb));
+            suburbs.push_back(std::move(suburb));
         }
 
         if (suburbs.empty()) throw runtime_error("No suburb polygons loaded from GeoJSON");
