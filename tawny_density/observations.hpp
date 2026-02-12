@@ -14,12 +14,15 @@
 #ifndef TAWNY_DENSITY_OBSERVATIONS_HPP_
 #define TAWNY_DENSITY_OBSERVATIONS_HPP_
 
-#include <stddef.h>  // for size_t
-#include <string>    // for string
-#include <vector>    // for vector
+#include <stddef.h>   // for size_t
+#include <string>     // for string
+#include <vector>     // for vector
+#include "utils.hpp"  // for HttpResponse, IHttpClient
 
 using std::vector;
 using std::string;
+using utils::HttpResponse;
+using utils::IHttpClient;
 
 namespace observations {
 
