@@ -47,18 +47,17 @@ include(CTest)
 
 add_executable(tawny_density_tests
     tests/test_observations.cpp
-    tests/test_observations.cpp
-)
-
-# doctest header lives in tests/doctest/doctest.h
-target_include_directories(tawny_density_tests
-    PRIVATE
-        tests
 )
 
 target_link_libraries(tawny_density_tests
     PRIVATE
         tawny_density_lib
+)
+
+
+target_include_directories(tawny_density_tests
+    PRIVATE
+        tests
 )
 
 add_test(NAME tawny_density_tests COMMAND tawny_density_tests)

@@ -45,3 +45,4 @@ tawny_density/counts.csv
 .vscode/
 coverage.html
 Testing/
+run_tests.sh

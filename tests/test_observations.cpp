@@ -1,12 +1,15 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include <doctest/doctest.h>
-
 #include <string>
+#include "../tawny_density/observations.hpp"
+
+
 using std::string;
 
-// -----------------------------------------------------------------------------
-// Production code declarations
-// -----------------------------------------------------------------------------
+using observations::urlEncode;
+using observations::curlWriteToString;
+// using observations::httpGet;
+// using observations::fetchINatPoints;
 
 // We wrap curl_easy_escape so we can mock it in tests.
 extern "C" {
@@ -21,22 +24,8 @@ static char* curlEscapeDefault(const char* s, int len) {
     return curl_easy_escape(nullptr, s, len);
 }
 
-// Function under test
-string urlEncode(const string& url) {
-    if (!curlEscapeWrapper)
-        curlEscapeWrapper = curlEscapeDefault;
-
-    char* out = curlEscapeWrapper(url.c_str(), static_cast<int>(url.size()));
-    if (!out)
-        return url;
-
-    string encoded(out);
-    curl_free(out);
-    return encoded;
-}
-
 // -----------------------------------------------------------------------------
-// Tests
+// Tests for urlEncode
 // -----------------------------------------------------------------------------
 
 TEST_CASE("urlEncode encodes spaces") {
@@ -77,4 +66,47 @@ TEST_CASE("urlEncode returns original string when curl_easy_escape fails") {
 
     // Restore default for safety
     curlEscapeWrapper = curlEscapeDefault;
+}
+
+// -----------------------------------------------------------------------------
+// Tests for curlWriteToString
+// -----------------------------------------------------------------------------
+
+TEST_CASE("curlWriteToString appends data correctly") {
+    string buffer;
+
+    const char* data = "hello world";
+    size_t size = 1;
+    size_t nmemb = 11; // strlen("hello world")
+
+    size_t written = curlWriteToString((void*)data, size, nmemb, &buffer);
+
+    CHECK(written == 11);
+    CHECK(buffer == "hello world");
+}
+
+TEST_CASE("curlWriteToString handles multi-byte chunks") {
+    string buffer;
+
+    const char* data = "abc123";
+    size_t size = 2;     // pretend each element is 2 bytes
+    size_t nmemb = 3;    // 3 elements → 6 bytes total
+
+    size_t written = curlWriteToString((void*)data, size, nmemb, &buffer);
+
+    CHECK(written == 6);
+    CHECK(buffer == "abc123");
+}
+
+TEST_CASE("curlWriteToString appends to existing content") {
+    string buffer = "prefix:";
+
+    const char* data = "XYZ";
+    size_t size = 1;
+    size_t nmemb = 3;
+
+    size_t written = curlWriteToString((void*)data, size, nmemb, &buffer);
+
+    CHECK(written == 3);
+    CHECK(buffer == "prefix:XYZ");
 }
