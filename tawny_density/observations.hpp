@@ -35,7 +35,7 @@ struct ObsPoint { double lon{}, lat{}; };
 
 static size_t curlWriteToString(void* contents, size_t size, size_t nmemb, void* userData);
 string urlEncode(const string& url);
-string httpGet(const string& url);
+string httpGet(IHttpClient& client, const string& url);
 
 vector<ObsPoint> fetchINatPoints(
     const std::string& taxonName,
