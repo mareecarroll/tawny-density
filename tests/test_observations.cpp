@@ -1,14 +1,30 @@
+// Copyright 2026 Maree Carroll
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include <doctest/doctest.h>
 #include <string>
 #include "../tawny_density/observations.hpp"
-
+#include "fake_http_client.hpp"
 
 using std::string;
 
+using utils::HttpResponse;
+using utils::IHttpClient;
+
 using observations::urlEncode;
 using observations::curlWriteToString;
-// using observations::httpGet;
+using observations::httpGet;
 // using observations::fetchINatPoints;
 
 // We wrap curl_easy_escape so we can mock it in tests.
@@ -109,4 +125,32 @@ TEST_CASE("curlWriteToString appends to existing content") {
 
     CHECK(written == 3);
     CHECK(buffer == "prefix:XYZ");
+}
+
+// -----------------------------------------------------------------------------
+// Tests for curlWriteToString
+// -----------------------------------------------------------------------------
+
+TEST_CASE("httpGet returns body on success") {
+    FakeHttpClient fake;
+    fake.next = {200, "OK"};
+
+    CHECK(httpGet(fake, "http://example.com") == "OK");
+}
+
+TEST_CASE("httpGet returns empty string on HTTP error") {
+    FakeHttpClient fake;
+    fake.next = {500, "Server error"};
+
+    CHECK(httpGet(fake, "http://example.com") == "");
+}
+
+TEST_CASE("httpGet returns empty string on exception") {
+    struct ThrowingClient : IHttpClient {
+        HttpResponse get(const std::string&) override {
+            throw std::runtime_error("boom");
+        }
+    } bad;
+
+    CHECK(httpGet(bad, "http://example.com") == "");
 }

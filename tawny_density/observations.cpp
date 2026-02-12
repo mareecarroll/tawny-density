@@ -28,6 +28,7 @@
 #include <thread>                 // for sleep_for
 #include <unordered_map>          // for unordered_map
 #include <vector>                 // for vector
+#include "utils.hpp"              // for HttpResponse, CurlHttpClient, IHttpClient
 
 using std::string;
 using std::vector;
@@ -47,6 +48,9 @@ using observations::ObsPoint;
 using observations::URL_BASE;
 using observations::USER_AGENT;
 using observations::PER_PAGE;
+
+using utils::HttpResponse;
+using utils::IHttpClient;
 
 namespace observations {
 // Callback function for handling response from inaturalist API call
@@ -81,42 +85,23 @@ string urlEncode(const string& url) {
 // HTTP GET call to inaturalist API
 //
 // Args:
+//    client: the HTTP client to use for making the request
 //    url: the API url
 // Returns:
 //   response from the API call
-string httpGet(const string& url) {
-    string buffer;
-    curl_global_init(CURL_GLOBAL_DEFAULT);
+string httpGet(IHttpClient& client, const string& url) {
     try {
-        CURL* curl = curl_easy_init();
-        if (!curl) throw runtime_error("curl_easy_init failed");
-        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-        curl_easy_setopt(curl, CURLOPT_USERAGENT, USER_AGENT);
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curlWriteToString);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &buffer);
-        CURLcode res = curl_easy_perform(curl);
-        if (res != CURLE_OK) {
-            ostringstream oss;
-            oss << "CURL error: " << curl_easy_strerror(res);
-            curl_easy_cleanup(curl);
-            throw runtime_error(oss.str());
+        HttpResponse resp = client.get(url);
+
+        if (resp.status < 200 || resp.status >= 300) {
+            return "";
         }
-        int code = 0;
-        curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &code);
-        curl_easy_cleanup(curl);
-        if (code < 200 || code >= 300) {
-            ostringstream oss;
-            oss << "HTTP " << code << " for URL: " << url;
-            throw runtime_error(oss.str());
-        }
-    } catch (const exception& e) {
-        cerr << "Fatal: " << e.what() << "\n";
-        curl_global_cleanup();
+
+        return resp.body;
+    }
+    catch (...) {
         return "";
     }
-    curl_global_cleanup();
-    return buffer;
 }
 
 // Fetches observation points from iNaturalist
