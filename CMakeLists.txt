@@ -47,6 +47,13 @@ include(CTest)
 
 add_executable(tawny_density_tests
     tests/test_observations.cpp
+    tests/fake_http_client.hpp
+)
+
+target_include_directories(tawny_density_tests
+    PRIVATE
+        tests
+        tawny_density
 )
 
 target_link_libraries(tawny_density_tests
@@ -54,11 +61,6 @@ target_link_libraries(tawny_density_tests
         tawny_density_lib
 )
 
-
-target_include_directories(tawny_density_tests
-    PRIVATE
-        tests
-)
 
 add_test(NAME tawny_density_tests COMMAND tawny_density_tests)
 
