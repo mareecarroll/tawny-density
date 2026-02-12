@@ -14,10 +14,9 @@
 #ifndef TAWNY_DENSITY_SUBURB_H_
 #define TAWNY_DENSITY_SUBURB_H_
 
-#include <string>
-#include <vector>
-
-#include <nlohmann/json.hpp>
+#include <nlohmann/json_fwd.hpp>  // for json
+#include <string>                 // for string, basic_string
+#include <vector>                 // for vector
 
 using std::string;
 using std::vector;
