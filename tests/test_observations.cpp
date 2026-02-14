@@ -122,6 +122,7 @@ TEST_CASE("fetchINatPoints parses a simple iNaturalist response") {
     fake.next = {
         200,
         R"({
+            "total_results": 2,
             "results": [
                 {
                     "geojson": { "coordinates": [144.9631, -37.8136] },

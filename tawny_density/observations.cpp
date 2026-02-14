@@ -135,48 +135,38 @@ vector<ObsPoint> fetchINatPoints(
 
         const string body = httpGet(client, url.str());
 
-        if (body.size() == 0) throw runtime_error("Couldn't fetch observations");
-        const auto j = json::parse(body);
+        if (body.empty()) break;
+        
+        json j;
+        try {
+            j = json::parse(body);
+        } catch(...) {
+            break;
+        }
 
         if (total_results < 0 && j.contains("total_results")) {
-            total_results = j["total_results"].get<int>();
+            total_results = j["total_results"];
         }
 
         if (!j.contains("results") || !j["results"].is_array()) break;
-        const auto& results = j["results"];
-        if (results.empty()) break;
 
-        for (const auto& r : results) {
-            // Prefer geometry -> fall back to lat/lon fields
-            double lat = NAN, lon = NAN;
-            if (r.contains("geojson") && r["geojson"].contains("coordinates")) {
-                const auto& coords = r["geojson"]["coordinates"];
-                if (coords.is_array() && coords.size() == 2) {
-                    lon = coords[0].get<double>();
-                    lat = coords[1].get<double>();
-                }
-            }
-            if (isnan(lat) || isnan(lon)) {
-                // alternative fields
-                if (r.contains("latitude") && r.contains("longitude") &&
-                    !r["latitude"].is_null() && !r["longitude"].is_null()) {
-                    lat = r["latitude"].get<double>();
-                    lon = r["longitude"].get<double>();
-                }
-            }
-            if (!isnan(lat) && !isnan(lon)) {
-                out.push_back(ObsPoint{lon, lat});
-            }
+        for (auto& item : j["results"]) {
+            // Skip if no geojson or coordinates
+            if (!item.contains("geojson")) continue;
+            if (!item["geojson"].contains("coordinates")) continue;
+            // Skip if coordinates are not an array of size 2
+            auto coords = item["geojson"]["coordinates"];
+            if (!coords.is_array() || coords.size() != 2) continue;
+            // get the coordinates and add to output
+            ObsPoint p;
+            p.lon = coords[0].get<double>();
+            p.lat = coords[1].get<double>();
+            out.push_back(p);
         }
 
-        // crude stop conditions
-        if (static_cast<int>(results.size()) < PER_PAGE) break;
-        if (total_results >= 0 && (page * PER_PAGE) >= total_results) break;
-        if (page >= 100) {
-            cerr << "[warn] Reached page 100; iNaturalist may require auth for higher pages. "
-                    "Stopping to avoid being blocked.\n";
-            break;
-        }
+        // If we've fetched all results, break
+        if (static_cast<int>(out.size()) >= total_results) break;
+
         ++page;
         sleep_for(milliseconds(1100));  // politeness delay
     }
