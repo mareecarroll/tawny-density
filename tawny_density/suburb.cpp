@@ -60,21 +60,72 @@ void ringBounds(const Ring& ring, double* minLon, double* minLat, double* maxLon
     }
 }
 
+// bool onSegment(Point p, Point p1, Point p2) {
+//     // Check if point p is collinear with p1 and p2
+//     double cross_product = (p.lat - p1.lat) * (p2.lon - p1.lon) - (p.lon - p1.lon) * (p2.lat - p1.lat);
+//     if (std::abs(cross_product) > 1e-9) return false; // Not collinear
+
+//     // Check if point p lies between p1 and p2 on the collinear line
+//     return (p.lon >= std::min(p1.lon, p2.lon) && p.lon <= std::max(p1.lon, p2.lon) &&
+//             p.lat >= std::min(p1.lat, p2.lat) && p.lat <= std::max(p1.lat, p2.lat));
+// }
+
 // Ray casting for point in ring (excluding boundary ambiguity -> treat boundary as inside)
-bool pointInRing(const Ring& ring, const Point& q) {
-    bool inside = false;
-    const auto& points = ring.points;
-    const size_t n = points.size();
-    if (n < 3) return false;
-    for (size_t i = 0, j = n - 1; i < n; j = i++) {
-        const Point& a = points[j];
-        const Point& b = points[i];
-        const bool intersect = ((a.lat > q.lat) != (b.lat > q.lat)) &&
-            (q.lon < (b.lon - a.lon) * (q.lat - a.lat) / (b.lat - a.lat + 1e-20) + a.lon);
-        if (intersect) inside = !inside;
+// bool pointInRing(const Ring& ring, const Point& q) {
+//     bool inside = false;
+//     const auto& points = ring.points;
+//     const size_t n = points.size();
+//     if (n < 3) return false;
+//     for (size_t i = 0, j = n - 1; i < n; j = i++) {
+//         const Point& a = points[j];
+//         const Point& b = points[i];
+//         const bool intersect = ((a.lat > q.lat) != (b.lat > q.lat)) &&
+//             (q.lon < (b.lon - a.lon) * (q.lat - a.lat) / (b.lat - a.lat + 1e-20) + a.lon);
+//         if (intersect) inside = !inside;
+//     }
+//     return inside;
+// }
+
+// Function to check if a point is inside a polygon using
+// the ray-casting algorithm
+// see https://www.geeksforgeeks.org/cpp/point-in-polygon-in-cpp/
+//    #c-program-to-check-point-in-polygon-using-raycasting-algorithm
+bool pointInRing(const Ring& ring, const Point& point) {
+    // Number of vertices in the polygon
+    int n = ring.points.size();
+    // Count of intersections
+    int count = 0;
+
+    // Iterate through each edge of the polygon
+    for (int i = 0; i < n; i++) {
+        Point p1 = ring.points[i];
+        // Ensure the last point connects to the first point
+        Point p2 = ring.points[(i + 1) % n];
+
+        // Check if the point's y-coordinate/lat is within the
+        // edge's y-range and if the point is to the left of
+        // the edge
+        if ((point.lat > min(p1.lat, p2.lat)) &&
+            (point.lat <= max(p1.lat, p2.lat)) &&
+            (point.lon <= max(p1.lon, p2.lon))) {
+            // Calculate the x-coordinate/lat of the
+            // intersection of the edge with a horizontal
+            // line through the point
+            double xIntersect = (point.lat - p1.lat) * (p2.lon - p1.lon)
+                / (p2.lat - p1.lat) + p1.lon;
+            // If the edge is vertical or the point's
+            // x-coordinate is less than or equal to the
+            // intersection x-coordinate, increment count
+            if (p1.lon == p2.lon || point.lon <= xIntersect) {
+                count++;
+            }
+        }
     }
-    return inside;
+    // If the number of intersections is odd, the point is
+    // inside the polygon
+    return count % 2 == 1;
 }
+
 
 // Returns true if point is inside polygon
 //
@@ -85,10 +136,10 @@ bool pointInRing(const Ring& ring, const Point& q) {
 //     true if point sits inside polygon
 bool pointInPolygon(const Polygon& poly, const Point& point) {
     // Fast bounding box reject
-    if (point.lon < poly.minLon ||
-        point.lon > poly.maxLon ||
-        point.lat < poly.minLat ||
-        point.lat > poly.maxLat)
+    if (point.lon < poly.minLon + 1e-12 ||
+        point.lon > poly.maxLon + 1e-12||
+        point.lat < poly.minLat + 1e-12||
+        point.lat > poly.maxLat + 1e-12)
         return false;
     if (poly.rings.empty()) return false;
     // Inside outer?
@@ -109,10 +160,10 @@ bool pointInPolygon(const Polygon& poly, const Point& point) {
 //     true if point sits inside bounding box
 bool pointInSuburb(const Suburb& suburb, const Point& point) {
     // Suburb-level bounding box
-    if (point.lon < suburb.minLon ||
-        point.lon > suburb.maxLon ||
-        point.lat < suburb.minLat ||
-        point.lat > suburb.maxLat)
+    if (point.lon < suburb.minLon + 1e-12 ||
+        point.lon > suburb.maxLon + 1e-12 ||
+        point.lat < suburb.minLat + 1e-12 ||
+        point.lat > suburb.maxLat + 1e-12)
         return false;
 
     return std::any_of(

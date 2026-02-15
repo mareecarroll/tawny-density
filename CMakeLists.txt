@@ -48,6 +48,7 @@ include(CTest)
 add_executable(tawny_density_tests
     tests/test_observations.cpp
     tests/fake_http_client.hpp
+    tests/test_suburb.cpp
 )
 
 target_include_directories(tawny_density_tests

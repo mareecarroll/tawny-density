@@ -136,7 +136,7 @@ vector<ObsPoint> fetchINatPoints(
         const string body = httpGet(client, url.str());
 
         if (body.empty()) break;
-        
+
         json j;
         try {
             j = json::parse(body);

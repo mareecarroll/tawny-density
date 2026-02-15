@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 #pragma once
-#include "utils.hpp"
+#include <string>
+#include "../tawny_density/utils.hpp"
 
 struct FakeHttpClient : public utils::IHttpClient {
     utils::HttpResponse next;

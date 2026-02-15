@@ -35,7 +35,15 @@ sudo make install
 pre-commit install
 ```
 
+## Running pre-commit
+
+```shell
+pre-commit run --files tests/* tawny_density/*
+```
+
 ## Tests and coverage
+
+Uses doctest (tests/doctest/doctest.h included)
 
 ```shell
 mkdir -p build && cd build
@@ -49,7 +57,7 @@ gcovr -r .. # terminal
 Alternatively to run doctest directly, full, verbose and human-friendly.
 
 ```script
-./tawny_density_tests 
+./tawny_density_tests
 ```
 
 ## Release Build with CMake

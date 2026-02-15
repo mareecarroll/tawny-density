@@ -53,7 +53,7 @@ struct Suburb {
 };
 
 void ringBounds(const Ring& ring, double* minLon, double* minLat, double* maxLon, double* maxLat);
-bool pointInRing(const Ring& ring, const Point& q);
+bool pointInRing(const Ring& ring, const Point& point);
 bool pointInPolygon(const Polygon& poly, const Point& point);
 bool pointInSuburb(const Suburb& suburb, const Point& point);
 string detectNameField(const json& props);

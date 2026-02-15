@@ -45,28 +45,28 @@ static char* curlEscapeDefault(const char* s, int len) {
 
 TEST_CASE("urlEncode encodes spaces") {
     curlEscapeWrapper = curlEscapeDefault;
-    CHECK(urlEncode("hello world") == "hello%20world");
+    CHECK_EQ(urlEncode("hello world"), "hello%20world");
 }
 
 TEST_CASE("urlEncode encodes reserved characters") {
     curlEscapeWrapper = curlEscapeDefault;
-    CHECK(urlEncode("a&b=c") == "a%26b%3Dc");
+    CHECK_EQ(urlEncode("a&b=c"), "a%26b%3Dc");
 }
 
 TEST_CASE("urlEncode leaves safe characters unchanged") {
     curlEscapeWrapper = curlEscapeDefault;
-    CHECK(urlEncode("abc123") == "abc123");
+    CHECK_EQ(urlEncode("abc123"), "abc123");
 }
 
 TEST_CASE("urlEncode handles empty string") {
     curlEscapeWrapper = curlEscapeDefault;
-    CHECK(urlEncode("") == "");
+    CHECK_EQ(urlEncode(""), "");
 }
 
 TEST_CASE("urlEncode encodes UTF-8 bytes") {
     curlEscapeWrapper = curlEscapeDefault;
     // "✓" is UTF‑8: E2 9C 93
-    CHECK(urlEncode("✓") == "%E2%9C%93");
+    CHECK_EQ(urlEncode("✓"), "%E2%9C%93");
 }
 
 TEST_CASE("urlEncode returns original string when curl_easy_escape fails") {
@@ -77,7 +77,7 @@ TEST_CASE("urlEncode returns original string when curl_easy_escape fails") {
 
     curlEscapeWrapper = fakeFail;
 
-    CHECK(urlEncode("abc") == "abc");
+    CHECK_EQ(urlEncode("abc"), "abc");
 
     // Restore default for safety
     curlEscapeWrapper = curlEscapeDefault;
@@ -91,14 +91,14 @@ TEST_CASE("httpGet returns body on success") {
     FakeHttpClient fake;
     fake.next = {200, "OK"};
 
-    CHECK(httpGet(fake, "http://example.com") == "OK");
+    CHECK_EQ(httpGet(fake, "http://example.com"), "OK");
 }
 
 TEST_CASE("httpGet returns empty string on HTTP error") {
     FakeHttpClient fake;
     fake.next = {500, "Server error"};
 
-    CHECK(httpGet(fake, "http://example.com") == "");
+    CHECK_EQ(httpGet(fake, "http://example.com"), "");
 }
 
 TEST_CASE("httpGet returns empty string on exception") {
@@ -108,7 +108,7 @@ TEST_CASE("httpGet returns empty string on exception") {
         }
     } bad;
 
-    CHECK(httpGet(bad, "http://example.com") == "");
+    CHECK_EQ(httpGet(bad, "http://example.com"), "");
 }
 
 // -----------------------------------------------------------------------------
@@ -141,16 +141,15 @@ TEST_CASE("fetchINatPoints parses a simple iNaturalist response") {
         "Aves",
         "2024-01-01", "2024-01-31",
         -38.0, 144.0,
-        -37.0, 146.0
-    );
+        -37.0, 146.0);
 
-    CHECK(points.size() == 2);
+    CHECK_EQ(points.size(), 2);
 
-    CHECK(points[0].lon == doctest::Approx(144.9631));
-    CHECK(points[0].lat == doctest::Approx(-37.8136));
+    CHECK_EQ(points[0].lon, doctest::Approx(144.9631));
+    CHECK_EQ(points[0].lat, doctest::Approx(-37.8136));
 
-    CHECK(points[1].lon == doctest::Approx(145.0000));
-    CHECK(points[1].lat == doctest::Approx(-37.8200));
+    CHECK_EQ(points[1].lon, doctest::Approx(145.0000));
+    CHECK_EQ(points[1].lat, doctest::Approx(-37.8200));
 }
 
 TEST_CASE("fetchINatPoints returns empty vector on HTTP error") {
@@ -162,8 +161,7 @@ TEST_CASE("fetchINatPoints returns empty vector on HTTP error") {
         "Aves",
         "2024-01-01", "2024-01-31",
         -38.0, 144.0,
-        -37.0, 146.0
-    );
+        -37.0, 146.0);
 
     CHECK(points.empty());
 }
@@ -177,8 +175,7 @@ TEST_CASE("fetchINatPoints returns empty vector on malformed JSON") {
         "Aves",
         "2024-01-01", "2024-01-31",
         -38.0, 144.0,
-        -37.0, 146.0
-    );
+        -37.0, 146.0);
 
     CHECK(points.empty());
 }
