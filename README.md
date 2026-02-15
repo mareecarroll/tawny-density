@@ -83,6 +83,12 @@ Top suburb (Spring 2025): BLACKBURN — 289 sightings
 Wrote counts CSV to counts.csv
 ```
 
+## Running memcheck
+
+```shell
+valgrind ./build/tawny_density --geojson tawny_density/suburb-10-vic.geojson --out counts.csv
+```
+
 ## Implementation details & assumptions
 
 - If you want to lock to a numeric taxon_id, you can first hit GET /v1/taxa?q=Podargus%20strigoides and pass taxon_id instead. (That’s supported by the same API family.) [inaturalist.org]
